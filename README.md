@@ -1,39 +1,52 @@
-# AAH Post-Quantum Cryptography
+AAH Post-Quantum Cryptography
 
-**Superior Post-Quantum Asymmetric Cryptography Framework**
+Superior Post-Quantum Asymmetric Cryptography Framework
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Post-Quantum](https://img.shields.io/badge/Post--Quantum-Cryptography-green.svg)](https://csrc.nist.gov/Projects/post-quantum-cryptography)
 
-## 🎯 **Overview**
+Overview
 
 AAH Post-Quantum Cryptography is a comprehensive, self-contained framework for post-quantum cryptographic operations. Built with native Python implementations and designed to exceed intelligence agency capabilities, this framework provides quantum-resistant security for the next generation of applications.
 
-## 🔬 **Key Features**
+Key Features
 
-### **Core Cryptography**
-- **Native Post-Quantum Implementation**: Pure Python, no external dependencies
-- **Lattice-Based Security**: RLWE (Ring Learning With Errors) foundation
-- **Quantum-Resistant**: Designed to withstand quantum computer attacks
-- **Multiple Algorithms**: Kyber1024, Dilithium5, and custom implementations
+Core Cryptography
+Native Post-Quantum Implementation: Pure Python, no external dependencies
+Lattice-Based Security: RLWE (Ring Learning With Errors) foundation
+Quantum-Resistant: Designed to withstand quantum computer attacks
+Multiple Algorithms: Kyber1024, Dilithium5, and custom implementations
 
-### **Security Capabilities**
-- **Key Encapsulation Mechanism (KEM)**: Secure key exchange
-- **Digital Signatures**: Lattice-based signature schemes
-- **AEAD Encryption**: ChaCha20-Poly1305 for symmetric operations
-- **Key Derivation**: HKDF-SHA256 for secure key expansion
-- **Quantum Obfuscation**: Advanced code protection techniques
+Security Capabilities
+Key Encapsulation Mechanism (KEM): Secure key exchange
+Digital Signatures: Lattice-based signature schemes
+AEAD Encryption: ChaCha20-Poly1305 for symmetric operations
+Key Derivation: HKDF-SHA256 for secure key expansion
+Quantum Obfuscation: Advanced code protection techniques
 
-### **User Interface**
-- **Cross-Platform GUI**: Works on Windows, macOS, and Linux
-- **Intuitive Design**: Easy-to-use interface for all operations
-- **Contact Management**: Secure public key sharing
-- **Real-time Operations**: Instant encryption/decryption
+User Interface
+Cross-Platform GUI: Works on Windows, macOS, and Linux
+Intuitive Design: Easy-to-use interface for all operations
+Contact Management: Secure public key sharing
+Real-time Operations: Instant encryption/decryption
 
-## 🚀 **Quick Start**
+Airgapped Security Design
 
-### **Installation**
+While a web version similar to CyberChef could be developed, this application is intentionally designed as an airgapped desktop application for maximum security. This design choice ensures:
+
+Complete isolation from network threats
+No data transmission over potentially compromised networks
+Maximum protection for sensitive communications
+Compliance with airgapped security requirements
+Protection against advanced persistent threats (APTs)
+Secure handling of classified and sensitive information
+
+The airgapped approach provides the highest level of security for organizations requiring the most secure communications possible.
+
+Quick Start
+
+Installation
 
 ```bash
 # Clone the repository
@@ -51,7 +64,7 @@ pip install -r requirements_aah_security.txt
 python aah_security_gui.py
 ```
 
-### **Basic Usage**
+Basic Usage
 
 ```python
 from aah_pqcore import PQCore
@@ -70,7 +83,7 @@ decrypted = pq.decrypt_with_sk(encrypted, private_key)
 print(decrypted)  # "Hello World!"
 ```
 
-## 📁 **Project Structure**
+Project Structure
 
 ```
 AAH_PostQuantum_Cryptography/
@@ -83,40 +96,40 @@ AAH_PostQuantum_Cryptography/
 └── README.md                   # This file
 ```
 
-## 🔑 **Key Types**
+Key Types
 
-### **Encryption Keys**
-- **Purpose**: Confidentiality and secure communication
-- **Algorithm**: Native RLWE-based KEM + ChaCha20-Poly1305 AEAD
-- **Usage**: Encrypt messages that only the private key holder can decrypt
+Encryption Keys
+Purpose: Confidentiality and secure communication
+Algorithm: Native RLWE-based KEM + ChaCha20-Poly1305 AEAD
+Usage: Encrypt messages that only the private key holder can decrypt
 
-### **Signature Keys**
-- **Purpose**: Authentication and message integrity
-- **Algorithm**: Lattice-based digital signatures
-- **Usage**: Sign messages to prove authenticity and prevent tampering
+Signature Keys
+Purpose: Authentication and message integrity
+Algorithm: Lattice-based digital signatures
+Usage: Sign messages to prove authenticity and prevent tampering
 
-### **Master Keys**
-- **Purpose**: Root authority and key management
-- **Usage**: Authorize other keys, manage key lifecycles
-- **Security**: Store offline when possible, highest privilege level
+Master Keys
+Purpose: Root authority and key management
+Usage: Authorize other keys, manage key lifecycles
+Security: Store offline when possible, highest privilege level
 
-## 🔐 **Security Features**
+Security Features
 
-### **Post-Quantum Cryptography**
-- **Native Implementation**: Pure Python, no external dependencies
-- **Lattice-Based**: RLWE foundation for quantum resistance
-- **Compact Format**: Single Base64 string for encrypted data
-- **Forward Secrecy**: Ephemeral keys for each encryption
+Post-Quantum Cryptography
+Native Implementation: Pure Python, no external dependencies
+Lattice-Based: RLWE foundation for quantum resistance
+Compact Format: Single Base64 string for encrypted data
+Forward Secrecy: Ephemeral keys for each encryption
 
-### **Cryptographic Strength**
-- **Key Size**: 32-byte secret keys with SHA3-256 derived public keys
-- **AEAD Encryption**: ChaCha20-Poly1305 for authenticated encryption
-- **Key Derivation**: HKDF-SHA256 for secure key expansion
-- **Random Generation**: Cryptographically secure random number generation
+Cryptographic Strength
+Key Size: 32-byte secret keys with SHA3-256 derived public keys
+AEAD Encryption: ChaCha20-Poly1305 for authenticated encryption
+Key Derivation: HKDF-SHA256 for secure key expansion
+Random Generation: Cryptographically secure random number generation
 
-## 🛠️ **Development**
+Development
 
-### **API Usage**
+API Usage
 
 ```python
 from aah_pqcore import PQCore
@@ -138,25 +151,25 @@ signature = pq.sign(sig_sk, "Message")
 verified = pq.verify(sig_pk, "Message", signature)
 ```
 
-### **Integration Examples**
+Integration Examples
 
-- **Chat Applications**: Secure messaging with post-quantum crypto
-- **File Encryption**: Protect sensitive documents and data
-- **API Security**: Secure communication between services
-- **IoT Devices**: Lightweight crypto for embedded systems
+Chat Applications: Secure messaging with post-quantum crypto
+File Encryption: Protect sensitive documents and data
+API Security: Secure communication between services
+IoT Devices: Lightweight crypto for embedded systems
 
-## 📊 **Performance**
+Performance
 
-- **Lightweight**: Minimal memory footprint
-- **Fast Operations**: Optimized for real-time encryption/decryption
-- **Scalable**: Efficient key management for multiple users
-- **Portable**: Single-file deployment possible
+Lightweight: Minimal memory footprint
+Fast Operations: Optimized for real-time encryption/decryption
+Scalable: Efficient key management for multiple users
+Portable: Single-file deployment possible
 
-## 🤝 **Contributing**
+Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+We welcome contributions! Please see our Contributing Guidelines for details.
 
-### **Development Setup**
+Development Setup
 
 ```bash
 # Fork the repository
@@ -176,31 +189,29 @@ black .
 flake8 .
 ```
 
-## 📄 **License**
+License
 
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache License 2.0 - see the LICENSE file for details.
 
-## 🔬 **Patent Information**
+Patent Information
 
 This software is protected by patents owned by Ahmed Hassan (A2Z SOC). The Apache 2.0 license includes a patent grant that allows use of the patented technology under the terms of the license.
 
-## 📞 **Support**
+Support
 
-- **GitHub Issues**: [Report bugs and request features](https://github.com/AAH20/AAH_PostQuantum_Cryptography/issues)
-- **Documentation**: Comprehensive in-code documentation
-- **Community**: Join discussions in GitHub discussions
+GitHub Issues: Report bugs and request features
+Documentation: Comprehensive in-code documentation
+Community: Join discussions in GitHub discussions
 
-## 🏆 **Acknowledgments**
+Acknowledgments
 
-- **NIST**: For post-quantum cryptography standards
-- **Open Quantum Safe**: For reference implementations
-- **Cryptography Community**: For ongoing research and development
+NIST: For post-quantum cryptography standards
+Open Quantum Safe: For reference implementations
+Cryptography Community: For ongoing research and development
 
----
+AAH Post-Quantum Cryptography
+Superior Security for the Quantum Era
 
-**AAH Post-Quantum Cryptography**  
-*Superior Security for the Quantum Era*
-
-**Author**: Ahmed Hassan (A2Z SOC)  
-**Version**: 2.0.0  
-**Date**: January 2025
+Author: Ahmed Hassan (A2Z SOC)
+Version: 2.0.0
+Date: October 3, 2025
