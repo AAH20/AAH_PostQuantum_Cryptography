@@ -29,7 +29,7 @@ class AAHSecurityGUI:
     
     def __init__(self, root):
         self.root = root
-        self.root.title("AAH Security - Superior Asymmetric Cryptography")
+        self.root.title("Superior Post Quantum Asymmetric Cryptography")
         self.root.geometry("900x700")
         self.root.configure(bg='#2c3e50')
         
@@ -69,7 +69,7 @@ class AAHSecurityGUI:
         title_frame.pack(fill='x', padx=10, pady=10)
         
         title_label = tk.Label(title_frame, 
-                              text="AAH Security - Superior Asymmetric Cryptography",
+                              text="Superior Post Quantum Asymmetric Cryptography",
                               font=('Arial', 16, 'bold'),
                               fg='white',
                               bg='#2c3e50')
