@@ -6,6 +6,10 @@ A Python toolkit and desktop GUI for post-quantum key encapsulation and digital 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Post-Quantum](https://img.shields.io/badge/Post--Quantum-Cryptography-green.svg)](https://csrc.nist.gov/Projects/post-quantum-cryptography)
 
+## Real-world usage
+
+The OQS-backed ML-KEM/ML-DSA path here is cross-compatible with [GRC_Claw's `quantum-resistant-crypto` package](https://github.com/AAH20/GRC_Claw/tree/main/packages/quantum-resistant-crypto) (real ML-KEM-768/ML-DSA-65 via `@noble/post-quantum` in TypeScript), and with the ML-DSA-65 signing now live on [A2Z SOC's agent attestation ledger](https://a2zsoc.com). Same NIST standard (FIPS 203/204), two independent implementations, one in Python via `liboqs`, one in TypeScript via `@noble/post-quantum`, signatures and shared secrets produced by either are verifiable by the other.
+
 ## What this actually is
 
 This repo has two distinct parts with very different maturity levels. Read this section before using either.
