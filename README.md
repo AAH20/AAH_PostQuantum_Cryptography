@@ -10,6 +10,12 @@ A Python toolkit and desktop GUI for post-quantum key encapsulation and digital 
 
 The OQS-backed ML-KEM/ML-DSA path here is cross-compatible with [GRC_Claw's `quantum-resistant-crypto` package](https://github.com/AAH20/GRC_Claw/tree/main/packages/quantum-resistant-crypto) (real ML-KEM-768/ML-DSA-65 via `@noble/post-quantum` in TypeScript), and with the ML-DSA-65 signing now live on [A2Z SOC's agent attestation ledger](https://a2zsoc.com). Same NIST standard (FIPS 203/204), two independent implementations, one in Python via `liboqs`, one in TypeScript via `@noble/post-quantum`, signatures and shared secrets produced by either are verifiable by the other.
 
+## Telecom and 6G
+
+This repo implements the same NIST-standardized ML-KEM (FIPS 203) and ML-DSA (FIPS 204) algorithms that [NVIDIA cuPQC](https://developer.nvidia.com/cupqc) accelerates on GPUs, and that the Linux Foundation's Post-Quantum Cryptography Alliance funds as open infrastructure. Quantum-safe key exchange and signing for 6G signaling is real, active research (see [experimental PQC evaluation for 6G](https://arxiv.org/html/2605.06881)), and the [NVIDIA 6G Developer Program](https://developer.nvidia.com/6g-program), built on the AI Aerial platform, is a real, open venue for that work.
+
+This repo is a reference implementation, useful for prototyping and correctness testing against the same standards, not a certified or GPU-accelerated product. Anyone using PQC in a 6G research context should benchmark against `cuPQC` directly for anything performance-sensitive, and should treat any production or regulated deployment, telecom or otherwise, as requiring independent FIPS 140-3 module validation, which no open-source repository can substitute for by itself.
+
 ## What this actually is
 
 This repo has two distinct parts with very different maturity levels. Read this section before using either.
