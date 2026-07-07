@@ -160,6 +160,15 @@ class NativeBackend(Backend):
     """
 
     def __init__(self, security_level: str = 'max'):
+        import warnings
+        warnings.warn(
+            "NativeBackend is an experimental scaffold, NOT Kyber/Dilithium, and NOT secure. "
+            "Its current KEM mask is derivable from the public key alone (no NTT/lattice math is "
+            "implemented yet), so it provides no real confidentiality. Do not use it for real data; "
+            "use the default OQS backend instead. See README.md for details.",
+            RuntimeWarning,
+            stacklevel=2,
+        )
         self.security_level = security_level
 
     # --- Key Encapsulation (KEM) placeholders ---

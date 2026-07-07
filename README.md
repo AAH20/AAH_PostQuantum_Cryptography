@@ -1,217 +1,118 @@
-AAH Post-Quantum Cryptography
+# AAH Post-Quantum Cryptography
 
-Superior Post-Quantum Asymmetric Cryptography Framework
+A Python toolkit and desktop GUI for post-quantum key encapsulation and digital signatures, plus an experimental native lattice-scheme scaffold.
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Post-Quantum](https://img.shields.io/badge/Post--Quantum-Cryptography-green.svg)](https://csrc.nist.gov/Projects/post-quantum-cryptography)
 
-Overview
+## What this actually is
 
-AAH Post-Quantum Cryptography is a comprehensive, self-contained framework for post-quantum cryptographic operations. Built with native Python implementations and designed to exceed intelligence agency capabilities, this framework provides quantum-resistant security for the next generation of applications.
+This repo has two distinct parts with very different maturity levels. Read this section before using either.
 
-Key Features
+### 1. OQS backend — real, standards-based, usable today
 
-Core Cryptography
-Native Post-Quantum Implementation: Pure Python, no external dependencies
-Lattice-Based Security: RLWE (Ring Learning With Errors) foundation
-Quantum-Resistant: Designed to withstand quantum computer attacks
-Multiple Algorithms: Kyber1024, Dilithium5, and custom implementations
+`PQCore` with the default `OQSBackend` wraps [liboqs](https://github.com/open-quantum-safe/liboqs) via the `oqs` Python bindings to perform ML-KEM (Kyber1024) key encapsulation and ML-DSA (Dilithium5) signatures, the actual NIST-standardized (FIPS 203 / FIPS 204) algorithms, plus ChaCha20-Poly1305 AEAD with HKDF-SHA256 key derivation. This path is only as secure as the upstream `liboqs` implementation it calls, this repo does not reimplement Kyber or Dilithium itself, it is a thin, convenience wrapper around an existing, audited library.
 
-Security Capabilities
-Key Encapsulation Mechanism (KEM): Secure key exchange
-Digital Signatures: Lattice-based signature schemes
-AEAD Encryption: ChaCha20-Poly1305 for symmetric operations
-Key Derivation: HKDF-SHA256 for secure key expansion
-Quantum Obfuscation: Advanced code protection techniques
+### 2. Native backend — experimental scaffold, not secure, do not use for real data
 
-User Interface
-Cross-Platform GUI: Works on Windows, macOS, and Linux
-Intuitive Design: Easy-to-use interface for all operations
-Contact Management: Secure public key sharing
-Real-time Operations: Instant encryption/decryption
+`NativeBackend` (`use_native=True`) is a from-scratch, dependency-free prototype. It is **not** Kyber, **not** Dilithium, and **not** RLWE-based despite earlier claims in this README. Specifically, as currently implemented:
 
-Airgapped Security Design
+- `aah_pqmath.py`'s NTT/INTT functions are unimplemented stubs (`ntt()` returns its input unchanged), and the noise samplers are placeholders. No lattice arithmetic is actually performed anywhere in the KEM path.
+- `NativeBackend.kem_encap` derives its masking value as `SHA3-256(public_key)`. Because that mask depends only on the public key, anyone who has the public key and an intercepted ciphertext, not just the holder of the secret key, can recompute the same mask and recover the encapsulated value. That means the native KEM as written does **not** provide confidentiality against a passive observer holding only the public key. This is a real, exploitable break, not a hypothetical one.
+- Native signature generation, signing, and verification are all unimplemented and raise `NotImplementedError`.
 
-While a web version similar to CyberChef could be developed, this application is intentionally designed as an airgapped desktop application for maximum security. This design choice ensures:
+If you use this repo, use the OQS backend (the default). Do not use `use_native=True` for anything beyond studying or extending the scaffold itself.
 
-Complete isolation from network threats
-No data transmission over potentially compromised networks
-Maximum protection for sensitive communications
-Compliance with airgapped security requirements
-Protection against advanced persistent threats (APTs)
-Secure handling of classified and sensitive information
+### 3. Code obfuscation module
 
-The airgapped approach provides the highest level of security for organizations requiring the most secure communications possible.
+`aah_quantum_obfuscation.py` mixes several hash functions (SHA3-256, BLAKE2b) and random entropy sources to obscure strings and code. This is an obfuscation utility, not a cryptographic security boundary, and prior wording describing it as "quantum-resistant" overstated what hash-based obfuscation actually provides. Do not rely on it to protect secrets; use the AEAD/KEM path above for that.
 
-Quick Start
+## Why this repo exists
 
-Installation
+It's a working space for two things: a practical, correct-by-construction wrapper around the real NIST PQC algorithms (via liboqs) for anyone who wants Kyber/Dilithium in a Python project without hand-rolling the FFI themselves, and an open, honestly-labeled scaffold for eventually building a from-scratch RLWE implementation, useful for learning, not yet for production.
+
+## Quick Start
+
+### Installation
 
 ```bash
-# Clone the repository
 git clone https://github.com/AAH20/AAH_PostQuantum_Cryptography.git
 cd AAH_PostQuantum_Cryptography
 
-# Create virtual environment
 python3 -m venv aah_security_env
 source aah_security_env/bin/activate  # On Windows: aah_security_env\Scripts\activate
 
-# Install dependencies
 pip install -r requirements_aah_security.txt
-
-# Run the application
 python aah_security_gui.py
 ```
 
-Basic Usage
+### Basic usage (OQS backend, real Kyber1024 + Dilithium5)
 
 ```python
 from aah_pqcore import PQCore
 
-# Initialize with native backend
-pq = PQCore(use_native=True)
+# Default backend: OQS (Kyber1024 KEM, Dilithium5 signatures)
+pq = PQCore()
 
-# Generate encryption keys
 private_key, public_key = pq.generate_encryption_keys()
-
-# Encrypt message
 encrypted = pq.encrypt_for_pk("Hello World!", public_key)
-
-# Decrypt message
 decrypted = pq.decrypt_with_sk(encrypted, private_key)
 print(decrypted)  # "Hello World!"
+
+sig_sk, sig_pk = pq.generate_signature_keys()
+signature = pq.sign(sig_sk, "Hello World!")
+assert pq.verify(sig_pk, "Hello World!", signature)
 ```
 
-Project Structure
+## Project structure
 
 ```
 AAH_PostQuantum_Cryptography/
-├── aah_security_gui.py          # Main GUI application
-├── aah_pqcore.py               # Post-quantum cryptography core
-├── aah_pqmath.py               # Mathematical primitives
-├── aah_quantum_obfuscation.py  # Code obfuscation system
-├── requirements_aah_security.txt # Dependencies
-├── LICENSE                     # Apache 2.0 License
-└── README.md                   # This file
+├── aah_security_gui.py          # Desktop GUI application
+├── aah_pqcore.py                # Backend selection: OQS (real) / Native (experimental) / Stub (test-only)
+├── aah_pqmath.py                # Lattice math scaffold (NTT is currently a stub)
+├── aah_quantum_obfuscation.py   # Hash-based code/string obfuscation utility
+├── requirements_aah_security.txt
+├── LICENSE                      # Apache 2.0
+└── README.md
 ```
 
-Key Types
+## Roadmap for the native backend
 
-Encryption Keys
-Purpose: Confidentiality and secure communication
-Algorithm: Native RLWE-based KEM + ChaCha20-Poly1305 AEAD
-Usage: Encrypt messages that only the private key holder can decrypt
+To make `NativeBackend` a real, reviewable RLWE implementation, the following need to happen before it should be trusted with any real data:
 
-Signature Keys
-Purpose: Authentication and message integrity
-Algorithm: Lattice-based digital signatures
-Usage: Sign messages to prove authenticity and prevent tampering
+1. Implement actual NTT/INTT for the chosen ring and modulus.
+2. Implement real centered binomial / discrete Gaussian noise sampling.
+3. Replace the current public-key-derivable mask with an actual RLWE encryption scheme (e.g., following the Kyber/ML-KEM construction) so confidentiality depends on the hardness of Ring-LWE, not on keeping a hash secret.
+4. Validate against the official NIST FIPS 203/204 test vectors, or clearly document that this is a distinct, non-standard scheme rather than compatible with Kyber/Dilithium.
+5. Get independent cryptographic review before any claim of production-readiness.
 
-Master Keys
-Purpose: Root authority and key management
-Usage: Authorize other keys, manage key lifecycles
-Security: Store offline when possible, highest privilege level
+Contributions on any of these are welcome.
 
-Security Features
+## Contributing
 
-Post-Quantum Cryptography
-Native Implementation: Pure Python, no external dependencies
-Lattice-Based: RLWE foundation for quantum resistance
-Compact Format: Single Base64 string for encrypted data
-Forward Secrecy: Ephemeral keys for each encryption
-
-Cryptographic Strength
-Key Size: 32-byte secret keys with SHA3-256 derived public keys
-AEAD Encryption: ChaCha20-Poly1305 for authenticated encryption
-Key Derivation: HKDF-SHA256 for secure key expansion
-Random Generation: Cryptographically secure random number generation
-
-Development
-
-API Usage
-
-```python
-from aah_pqcore import PQCore
-
-# Initialize with different backends
-pq_oqs = PQCore(prefer_oqs=True, use_native=False)  # OQS library
-pq_native = PQCore(use_native=True)                 # Native implementation
-
-# Generate different key types
-enc_sk, enc_pk = pq.generate_encryption_keys()
-sig_sk, sig_pk = pq.generate_signature_keys()
-
-# Encrypt/Decrypt
-encrypted = pq.encrypt_for_pk("Message", enc_pk)
-decrypted = pq.decrypt_with_sk(encrypted, enc_sk)
-
-# Sign/Verify
-signature = pq.sign(sig_sk, "Message")
-verified = pq.verify(sig_pk, "Message", signature)
-```
-
-Integration Examples
-
-Chat Applications: Secure messaging with post-quantum crypto
-File Encryption: Protect sensitive documents and data
-API Security: Secure communication between services
-IoT Devices: Lightweight crypto for embedded systems
-
-Performance
-
-Lightweight: Minimal memory footprint
-Fast Operations: Optimized for real-time encryption/decryption
-Scalable: Efficient key management for multiple users
-Portable: Single-file deployment possible
-
-Contributing
-
-We welcome contributions! Please see our Contributing Guidelines for details.
-
-Development Setup
+Pull requests welcome, especially toward the native backend roadmap above. Please open an issue describing the change before large PRs.
 
 ```bash
-# Fork the repository
-git clone https://github.com/yourusername/AAH_PostQuantum_Cryptography.git
-
-# Install development dependencies
 pip install -r requirements_aah_security.txt
 pip install pytest black flake8
 
-# Run tests
 pytest
-
-# Format code
 black .
-
-# Lint code
 flake8 .
 ```
 
-License
+## License
 
-This project is licensed under the Apache License 2.0 - see the LICENSE file for details.
+Apache License 2.0, see [LICENSE](LICENSE).
 
-Patent Information
+## Acknowledgments
 
-This software is protected by patents owned by Ahmed Hassan (A2Z SOC). The Apache 2.0 license includes a patent grant that allows use of the patented technology under the terms of the license.
+- [NIST](https://csrc.nist.gov/Projects/post-quantum-cryptography) for the post-quantum cryptography standards (FIPS 203, FIPS 204).
+- [Open Quantum Safe](https://openquantumsafe.org/) for `liboqs` and the Kyber/Dilithium implementations this repo wraps by default.
 
-Support
-
-GitHub Issues: Report bugs and request features
-Documentation: Comprehensive in-code documentation
-Community: Join discussions in GitHub discussions
-
-Acknowledgments
-
-NIST: For post-quantum cryptography standards
-Open Quantum Safe: For reference implementations
-Cryptography Community: For ongoing research and development
-
-AAH Post-Quantum Cryptography
-Superior Security for the Quantum Era
+---
 
 Author: Ahmed Hassan (A2Z SOC)
-Version: 2.0.0
-Date: October 3, 2025
+Version: 2.0.1
